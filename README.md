@@ -1,6 +1,6 @@
 # Jurgen Tea Cup Co.
 
-The perfect tea cup for Jurgen.
+Product landing page + Stripe Checkout for jurgenteacup.com.
 
 ## Quick start (< 10 minutes)
 
@@ -14,11 +14,40 @@ cd jurgen-tea-cup
 # 2. Install dependencies
 npm install
 
-# 3. Start the dev server
+# 3. Copy env and fill in keys
+cp .env.example .env.local
+
+# 4. Start the dev server
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000). Done.
+
+## Environment Variables
+
+| Variable | Description |
+|---|---|
+| `NEXT_PUBLIC_STRIPE_PAYMENT_LINK_URL` | Stripe Payment Link URL (from Stripe Dashboard) |
+| `STRIPE_SECRET_KEY` | Stripe secret key (for webhook verification) |
+| `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret |
+| `RESEND_API_KEY` | Resend API key |
+| `RESEND_FROM_EMAIL` | Verified sender email address |
+
+See `.env.example` for full instructions.
+
+## Stripe Setup
+
+1. Create product + Payment Link in Stripe Dashboard — price €48, collect email
+2. Copy link URL to `NEXT_PUBLIC_STRIPE_PAYMENT_LINK_URL`
+3. Add webhook endpoint: `https://your-domain.com/api/webhooks/stripe`, event: `checkout.session.completed`
+4. Copy signing secret to `STRIPE_WEBHOOK_SECRET`
+
+## Test Webhooks Locally
+
+```bash
+stripe listen --forward-to localhost:3000/api/webhooks/stripe
+stripe trigger checkout.session.completed
+```
 
 ## Scripts
 
